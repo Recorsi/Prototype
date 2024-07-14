@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deepfake Detection</title>
+</head>
+<body>
+    <h1>Upload a Video for Deepfake Detection</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+    {% if filename %}
+    <p>Processing complete. <a href="{{ url_for('results', filename=filename) }}">Download the output video</a></p>
+    {% elif error %}
+    <p>{{ error }}</p>
+    {% endif %}
+</body>
+</html>
