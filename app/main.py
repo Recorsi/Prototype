@@ -30,7 +30,7 @@ def upload_file():
             # Run the detection script
             output_filename = filename.rsplit('.', 1)[0] + '_output.avi'
             output_filepath = os.path.join(app.config['OUTPUT_FOLDER'], output_filename)
-            command = ['python3', 'detect_from_video.py', '-i', filepath, '-o', output_filepath]
+            command = ['python3', 'detect_from_video.py', '-i', filepath, '-o', app.config['OUTPUT_FOLDER']]
             result = subprocess.run(command, capture_output=True, text=True)
 
             # Debug output

@@ -20,7 +20,7 @@ def get_boundingbox(face, width, height, scale=1.3, minsize=None):
     if minsize:
         if size_bb < minsize:
             size_bb = minsize
-    center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2
+    center_x, center_y = (x1 + x2) // 2, (x1 + x2) // 2
     x1 = max(int(center_x - size_bb // 2), 0)
     y1 = max(int(center_y - size_bb // 2), 0)
     size_bb = min(width - x1, size_bb)
@@ -51,6 +51,7 @@ def test_full_image_network(video_path, model_path, output_path, start_frame=0, 
     print('Starting: {}'.format(video_path))
     reader = cv2.VideoCapture(video_path)
     video_fn = video_path.split('/')[-1].split('.')[0] + '_output.avi'
+    output_filepath = join(output_path, video_fn)
     os.makedirs(output_path, exist_ok=True)
     fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     fps = reader.get(cv2.CAP_PROP_FPS)
@@ -90,7 +91,7 @@ def test_full_image_network(video_path, model_path, output_path, start_frame=0, 
         pbar.update(1)
         height, width = image.shape[:2]
         if writer is None:
-            writer = cv2.VideoWriter(join(output_path, video_fn), fourcc, fps, (width, height))
+            writer = cv2.VideoWriter(output_filepath, fourcc, fps, (width, height))
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = face_detector(gray, 1)
         if len(faces):
@@ -109,13 +110,11 @@ def test_full_image_network(video_path, model_path, output_path, start_frame=0, 
             cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
         if frame_num >= end_frame:
             break
-        # cv2.imshow('test', image)  # Comment out this line
-        # cv2.waitKey(33)  # Comment out this line
         writer.write(image)  # Write the frame to the output video
     pbar.close()
     if writer is not None:
         writer.release()
-        print('Finished! Output saved under {}'.format(output_path))
+        print('Finished! Output saved at {}'.format(output_filepath))
     else:
         print('Input video file was empty')
 
